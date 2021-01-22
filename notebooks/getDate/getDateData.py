@@ -10,32 +10,30 @@ dateCreated = "Created: %s \n\n" % date.today().strftime("%Y-%m-%d")
 
 # Get data for past week or month and save out to a file.
 if str.lower(sys.argv[1]) == 'week':
-    query = "SELECT strftime('%Y-%m-%d', datetime(creationDate, 'unixepoch', 'localtime')) as date, title, \
-            CASE WHEN notes = '' THEN 'No Note' ELSE notes END AS test \
+    query = "SELECT strftime('%Y-%m-%d', datetime(creationDate, 'unixepoch', 'localtime')) as date, title \
             FROM TMTask \
             WHERE date BETWEEN datetime('now', '-6 days') AND datetime('now', 'localtime') \
             ORDER BY date DESC"
     results = conn.execute(query).fetchall()
 
-    with open((os.environ['HOME'] + '/Desktop/data.txt'), 'w+', encoding='utf-8-sig') as fp:
+    with open((os.environ['HOME'] + '/Desktop/' + date.today().strftime("%Y-%m-%d") + '_ThingsData.txt'), 'w+') as fp:
         fp.write(dateCreated)
         for val in results:
-            fp.write(('\n %s %s %s' %
-                      (val[0], val[1].encode('utf-8'), val[2].encode('utf-8'))))
+            fp.write(('\n %s %s' %
+                      (val[0].encode('utf-8-sig'), val[1].encode('utf-8'))))
 
 elif str.lower(sys.argv[1]) == 'month':
-    query = "SELECT strftime('%Y-%m-%d', datetime(creationDate, 'unixepoch', 'localtime')) as date, title, \
-            CASE WHEN notes = '' THEN 'No Note' ELSE notes END AS test \
+    query = "SELECT strftime('%Y-%m-%d', datetime(creationDate, 'unixepoch', 'localtime')) as date, title \
             FROM TMTask \
             WHERE date BETWEEN datetime('now', '-30 days') AND datetime('now', 'localtime') \
             ORDER BY date DESC"
     results = conn.execute(query).fetchall()
 
-    with open((os.environ['HOME'] + '/Desktop/data.txt'), 'w+', encoding='utf-8-sig') as fp:
+    with open((os.environ['HOME'] + '/Desktop/' + date.today().strftime("%Y-%m%-d") + '_ThingsData.txt'), 'w+') as fp:
         fp.write(dateCreated)
         for val in results:
-            fp.write(('\n %s %s %s' %
-                      (val[0], val[1].encode('utf-8-sig'), val[2].encode('utf-8-sig'))))
+            fp.write(('\n %s %s' %
+                      (val[0].encode('utf-8-sig'), val[1].encode('utf-8-sig'))))
 
 else:
     print("""
