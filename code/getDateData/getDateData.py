@@ -35,3 +35,5 @@ with open((os.environ['HOME'] + '/Desktop/' + date.today().strftime("%Y-%m-%d") 
     for val in results:
         fp.write(('\n %s %s' %
                   (val[0].encode('utf-8-sig'), val[1].encode('utf-8'))))
+
+print("\033[95mComplete!\033[0m")
