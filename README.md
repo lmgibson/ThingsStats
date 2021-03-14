@@ -4,6 +4,4 @@ This is a set of tools to analyze your [Things](https://culturedcode.com/things/
 
 # How To Use
 
-To get data from the past week or month you can type: `python ./path/to/folder/getDateData.py 'week'` where the argument can be either 'week' or 'month'. This will dump a file onto your desktop that contains a list of tasks within the past week or month by date and title.
-
-Alternatively, if you want to get a report on your task stats for the past week or month you can use: `python ./path/to/folder/report.py [month, week]`. This is a work in progress so it will just give you some summary stats over the past month.
+`python ./code/src/report.py` will initiate the program and for any options you will either be asked for input or lead through menus
