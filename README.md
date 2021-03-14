@@ -4,4 +4,4 @@ This is a set of tools to analyze your [Things](https://culturedcode.com/things/
 
 # How To Use
 
-`python ./code/src/report.py` will initiate the program and for any options you will either be asked for input or lead through menus
+`python ./src/report.py` will initiate the program and for any options you will either be asked for input or lead through menus
