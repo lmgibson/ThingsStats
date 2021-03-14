@@ -58,6 +58,13 @@ class statsReport(ThingsData):
         self.timeFrame = timeFrame
 
     def getNewTasks(self):
+        """Fetches any tasks that were created in the past X days
+        but ignores any that are in the trash. 
+
+        Returns:
+            list: List of tasks where each item is a tuple of info
+            for a given task.
+        """
         query = """
                 SELECT date(creationDate, 'unixepoch', 'localtime') as date, 
                         title
@@ -71,8 +78,11 @@ class statsReport(ThingsData):
         return createdTasks
 
     def getRecentCompletedTasks(self):
-        """
-        Prints how many tasks were completed in the past week
+        """Fetches completed tasks that were not trashed in the past
+        month or week, depending on user input.
+
+        Returns:
+            list: A list of tasks that contain a tuple of information
         """
         query = """
                 SELECT date(creationDate, 'unixepoch', 'localtime') as date, 
