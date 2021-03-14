@@ -6,7 +6,7 @@ import sys
 if __name__ == '__main__':
 
     # Get requested timeframe
-    timeFrame = utilities.getInputs(sys.argv)
+    timeFrame = utilities.parseInputs(sys.argv)
 
     # Get stats
     stats = td.statsReport(timeFrame)
@@ -19,5 +19,5 @@ if __name__ == '__main__':
         of which you have completed %s.\n""" %
           (timeFrame, len(createdTasks), len(completedTasks)))
 
-    for i in createdTasks:
-        print(i)
+    # Ask if user would like to see all created tasks
+    utilities.askPrintTasks(createdTasks)
