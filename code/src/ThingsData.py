@@ -66,24 +66,26 @@ class statsReport(ThingsData):
         """
         Gets new tasks from the past week.
         """
-        query = "SELECT datetime(creationDate, 'unixepoch', 'localtime') as date, title \
-            FROM TMTask \
-            WHERE date BETWEEN datetime('now', '-%s days') AND datetime('now', 'localtime') \
-                AND trashed = 0" % self.timeFrame
-        pastWeek = self.conn.execute(query).fetchall()
-        print("In the past %s days you have created %s new tasks:" %
-              (self.timeFrame, len(pastWeek)))
-        for i in pastWeek:
-            print(i)
+        query = """
+                SELECT datetime(creationDate, 'unixepoch', 'localtime') as date, title
+                FROM TMTask
+                WHERE date BETWEEN datetime('now', '-%s days')
+                    AND datetime('now', 'localtime')
+                    AND trashed = 0""" % self.timeFrame
+        createdTasks = self.conn.execute(query).fetchall()
+
+        return createdTasks
 
     def getRecentCompletedTasks(self):
         """
         Prints how many tasks were completed in the past week
         """
-        query = "SELECT datetime(creationDate, 'unixepoch', 'localtime') as date, title, status \
-            FROM TMTask \
-            WHERE date BETWEEN datetime('now', '-%s days') AND datetime('now', 'localtime') \
-                AND status = 3 \
-                AND trashed = 0" % self.timeFrame
-        pastWeek = self.conn.execute(query).fetchall()
-        print("Of which you have completed %s." % (len(pastWeek)))
+        query = """
+                SELECT datetime(creationDate, 'unixepoch', 'localtime') as date, title, status 
+                FROM TMTask
+                WHERE date BETWEEN datetime('now', '-%s days') AND datetime('now', 'localtime') 
+                    AND status = 3
+                    AND trashed = 0""" % (self.timeFrame)
+        completedTasks = self.conn.execute(query).fetchall()
+
+        return completedTasks
