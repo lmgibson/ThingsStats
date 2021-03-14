@@ -38,6 +38,7 @@ def askPrintTasks(createdTasks):
         "Would you like to see the created tasks [y/N]?\n").lower()
 
     if printTasks == 'y':
+        print("\n  Date         Task")
         for taskTuple in createdTasks:
             data = [task for task in taskTuple]
             print("%s: %s" % (data[0], data[1]))

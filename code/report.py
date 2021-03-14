@@ -15,7 +15,7 @@ if __name__ == '__main__':
 
     # Report to standard output
     print("""
-        In the past %s you have created %s tasks 
+        In the past %s days you have created %s tasks 
         of which you have completed %s.\n""" %
           (timeFrame, len(createdTasks), len(completedTasks)))
 
