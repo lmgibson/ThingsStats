@@ -59,12 +59,13 @@ class statsReport(ThingsData):
 
     def getNewTasks(self):
         query = """
-                SELECT datetime(creationDate, 'unixepoch', 'localtime') as date, 
+                SELECT date(creationDate, 'unixepoch', 'localtime') as date, 
                         title
                 FROM TMTask
                 WHERE date BETWEEN datetime('now', '-%s days')
                     AND datetime('now', 'localtime')
-                    AND trashed = 0""" % (self.timeFrame)
+                    AND trashed = 0
+                ORDER BY date DESC""" % (self.timeFrame)
         createdTasks = self.conn.execute(query).fetchall()
 
         return createdTasks
@@ -74,12 +75,13 @@ class statsReport(ThingsData):
         Prints how many tasks were completed in the past week
         """
         query = """
-                SELECT datetime(creationDate, 'unixepoch', 'localtime') as date, 
+                SELECT date(creationDate, 'unixepoch', 'localtime') as date, 
                        title, status 
                 FROM TMTask
                 WHERE date BETWEEN datetime('now', '-%s days') AND datetime('now', 'localtime') 
                     AND status = 3
-                    AND trashed = 0""" % (self.timeFrame)
+                    AND trashed = 0
+                ORDER BY date DESC""" % (self.timeFrame)
         completedTasks = self.conn.execute(query).fetchall()
 
         return completedTasks
