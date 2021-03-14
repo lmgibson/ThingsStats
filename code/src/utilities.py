@@ -10,7 +10,10 @@ def parseInputs(inputsList):
         string: string that is then used to decide what time
         frame to analyze the results over.
     """
-    if inputsList[1] in ['month', 'week']:
+    if len(inputsList) < 2:
+        print("Please provide a timeframe of 'month' or 'week'")
+        exit()
+    elif inputsList[1] in ['month', 'week']:
         if inputsList[1] == 'month':
             timeFrame = 30
         elif inputsList[1] == 'week':
