@@ -19,9 +19,6 @@ def parseInputs(inputsList):
     return timeFrame
 
 
-def
-
-
 def askPrintTasks(createdTasks):
     """Asks user if they would like to see the tasks they made
     in the past week. Will repeat until the user answers yes
