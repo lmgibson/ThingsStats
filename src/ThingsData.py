@@ -95,3 +95,24 @@ class statsReport(ThingsData):
         completedTasks = self.conn.execute(query).fetchall()
 
         return completedTasks
+
+    def getMonthlyCompletionRate(self):
+        """Fetches completed tasks that were not trashed in the past
+        month or week, depending on user input.
+
+        Returns:
+            list: A list of tasks that contain a tuple of information
+        """
+        query = """
+                SELECT substr(date,0,8), COUNT(substr(date,0,8))
+                FROM (
+                        SELECT date(creationDate, 'unixepoch', 'localtime') as date, 
+                        title, status 
+                        FROM TMTask
+                        WHERE status = 3 AND trashed = 0
+                    ) as tbl
+                GROUP BY substr(date,0,8)
+                ORDER BY substr(date,0,8) DESC"""
+        completedTasks = self.conn.execute(query).fetchall()
+
+        return completedTasks

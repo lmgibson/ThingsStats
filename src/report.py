@@ -12,6 +12,7 @@ if __name__ == '__main__':
     stats = td.statsReport(timeFrame)
     createdTasks = stats.getNewTasks()
     completedTasks = stats.getRecentCompletedTasks()
+    monthlyCompletions = stats.getMonthlyCompletionRate()
 
     # Report to standard output
     print("""
@@ -22,3 +23,8 @@ if __name__ == '__main__':
     # Ask if user would like to see all created tasks
     utilities.askPrintTasks(createdTasks)
 
+    # Print trends in task completions
+    print("\n  Month  Tasks Completed")
+    for dates in monthlyCompletions:
+      data = [data for data in dates]
+      print("%s:    %s" % (data[0], data[1]))
