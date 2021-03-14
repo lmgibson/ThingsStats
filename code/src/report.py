@@ -1,7 +1,6 @@
-from src import ThingsData as td
-from src import utilities
+import ThingsData as td
+import utilities
 from simple_term_menu import TerminalMenu
-import sys
 
 
 if __name__ == '__main__':
