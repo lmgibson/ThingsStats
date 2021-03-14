@@ -1,12 +1,13 @@
 from src import ThingsData as td
 from src import utilities
+from simple_term_menu import TerminalMenu
 import sys
 
 
 if __name__ == '__main__':
 
     # Get requested timeframe
-    timeFrame = utilities.parseInputs(sys.argv)
+    timeFrame = utilities.askForTimeFrame()
 
     # Get stats
     stats = td.statsReport(timeFrame)
@@ -21,3 +22,4 @@ if __name__ == '__main__':
 
     # Ask if user would like to see all created tasks
     utilities.askPrintTasks(createdTasks)
+
