@@ -55,23 +55,16 @@ class ThingsData():
 
 class statsReport(ThingsData):
     def __init__(self, timeFrame):
-        if timeFrame == 'week':
-            self.timeFrame = '6'
-        elif timeFrame == 'month':
-            self.timeFrame = '30'
-        else:
-            print('Timeframe can either by a week or a month')
+        self.timeFrame = timeFrame
 
     def getNewTasks(self):
-        """
-        Gets new tasks from the past week.
-        """
         query = """
-                SELECT datetime(creationDate, 'unixepoch', 'localtime') as date, title
+                SELECT datetime(creationDate, 'unixepoch', 'localtime') as date, 
+                        title
                 FROM TMTask
                 WHERE date BETWEEN datetime('now', '-%s days')
                     AND datetime('now', 'localtime')
-                    AND trashed = 0""" % self.timeFrame
+                    AND trashed = 0""" % (self.timeFrame)
         createdTasks = self.conn.execute(query).fetchall()
 
         return createdTasks
@@ -81,7 +74,8 @@ class statsReport(ThingsData):
         Prints how many tasks were completed in the past week
         """
         query = """
-                SELECT datetime(creationDate, 'unixepoch', 'localtime') as date, title, status 
+                SELECT datetime(creationDate, 'unixepoch', 'localtime') as date, 
+                       title, status 
                 FROM TMTask
                 WHERE date BETWEEN datetime('now', '-%s days') AND datetime('now', 'localtime') 
                     AND status = 3
