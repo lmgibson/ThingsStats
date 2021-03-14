@@ -35,8 +35,8 @@ def askPrintTasks(createdTasks):
         "Would you like to see the created tasks [y/N]?\n").lower()
 
     if printTasks == 'y':
-        for i in createdTasks:
-            print(i)
+        for taskTuple in createdTasks:
+            print("%s: %s", ([task for task in taskTuple]))
     elif printTasks == 'n':
         pass
     else:
