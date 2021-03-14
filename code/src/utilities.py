@@ -47,5 +47,3 @@ def askPrintTasks(createdTasks):
     else:
         print("Please answer with: y or N")
         askPrintTasks(createdTasks)
-
-    return
