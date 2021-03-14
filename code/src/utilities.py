@@ -36,7 +36,8 @@ def askPrintTasks(createdTasks):
 
     if printTasks == 'y':
         for taskTuple in createdTasks:
-            print("%s: %s", ([task for task in taskTuple]))
+            data = [task for task in taskTuple]
+            print("%s: %s" % (data[0], data[1]))
     elif printTasks == 'n':
         pass
     else:
