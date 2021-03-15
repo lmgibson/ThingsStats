@@ -104,15 +104,19 @@ class statsReport(ThingsData):
             list: A list of tasks that contain a tuple of information
         """
         query = """
-                SELECT substr(date,0,8), COUNT(substr(date,0,8))
-                FROM (
-                        SELECT date(creationDate, 'unixepoch', 'localtime') as date, 
-                        title, status 
+                    WITH monthtbl AS (
+                        SELECT status,
+                               substr(date(creationDate, 'unixepoch', 'localtime'),0,8) as date
                         FROM TMTask
-                        WHERE status = 3 AND trashed = 0
-                    ) as tbl
-                GROUP BY substr(date,0,8)
-                ORDER BY substr(date,0,8) DESC"""
+                        WHERE trashed = 0
+                    )
+                    SELECT date, COUNT(date) as created,
+                            SUM(CASE WHEN status = 3 THEN 1
+                                ELSE 0 END)
+                    FROM monthtbl
+                    GROUP BY date
+                    ORDER BY date DESC
+                    """
         completedTasks = self.conn.execute(query).fetchall()
 
         return completedTasks
