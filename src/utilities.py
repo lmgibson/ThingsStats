@@ -15,7 +15,7 @@ def askPrintTasks(tasksList):
         "Would you like to see the uncompleted tasks? [y/n]: ").lower()
 
     if printTasks == 'y':
-        print("\n\t  Date         Task")
+        print("\n\t  Date            Task")
         for taskTuple in tasksList:
             data = [task for task in taskTuple]
             print("\t%s:    %s" % (data[0], data[1]))
@@ -26,6 +26,21 @@ def askPrintTasks(tasksList):
         askPrintTasks(tasksList)
 
 
+def customTimeFrame():
+    customTimeFrame = input("How many days back would you like?: ")
+    try:
+        timeFrame = int(customTimeFrame)
+    except:
+        print("Please enter a number")
+        exit()
+
+    if timeFrame <= 0:
+        print("Please enter a number greater than 0")
+        exit()
+
+    return timeFrame
+
+
 def askForTimeFrame():
     """Presents a terminal list so the user can select their
     timeframe of analysis.
@@ -34,12 +49,14 @@ def askForTimeFrame():
         integer: timeframe in integer values 30 for month, 6 for week.
     """
     print("Please select a timeframe for your report:")
-    terminal_menu = TerminalMenu(["Month", "Week"])
+    terminal_menu = TerminalMenu(["Month", "Week", "Custom"])
     menu_choice = terminal_menu.show()
     if menu_choice == 0:
         timeFrame = 30
     elif menu_choice == 1:
         timeFrame = 6
+    else:
+        timeFrame = customTimeFrame()
 
     return timeFrame
 
