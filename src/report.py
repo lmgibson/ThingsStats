@@ -20,8 +20,9 @@ if __name__ == '__main__':
         of which you have completed %s.\n""" %
           (timeFrame, len(createdTasks), len(completedTasks)))
 
-    # Ask if user would like to see all created tasks
-    utilities.askPrintTasks(createdTasks)
+    # Ask if user would like to see all uncompleted tasks
+    uncompletedTasks = [i for i in createdTasks if i not in completedTasks]
+    utilities.askPrintTasks(uncompletedTasks)
 
     # Print trends in task completions
     utilities.askPrintTrends(monthlyCompletions)

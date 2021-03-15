@@ -1,7 +1,8 @@
 from simple_term_menu import TerminalMenu
 import numpy as np
 
-def askPrintTasks(createdTasks):
+
+def askPrintTasks(tasksList):
     """Asks user if they would like to see the tasks they made
     in the past week. Will repeat until the user answers yes
     or no.
@@ -11,18 +12,19 @@ def askPrintTasks(createdTasks):
         on the tasks that have been created in the past week or month.
     """
     printTasks = input(
-        "Would you like to see the created tasks [y/N]?\n").lower()
+        "Would you like to see the uncompleted tasks? [y/n]: ").lower()
 
     if printTasks == 'y':
         print("\n\t  Date         Task")
-        for taskTuple in createdTasks:
+        for taskTuple in tasksList:
             data = [task for task in taskTuple]
             print("\t%s:    %s" % (data[0], data[1]))
     elif printTasks == 'n':
         pass
     else:
         print("Please answer with: y or N")
-        askPrintTasks(createdTasks)
+        askPrintTasks(tasksList)
+
 
 def askForTimeFrame():
     """Presents a terminal list so the user can select their
@@ -31,7 +33,7 @@ def askForTimeFrame():
     Returns:
         integer: timeframe in integer values 30 for month, 6 for week.
     """
-    print("Please select a timeframe for your report:\n")
+    print("Please select a timeframe for your report:")
     terminal_menu = TerminalMenu(["Month", "Week"])
     menu_choice = terminal_menu.show()
     if menu_choice == 0:
@@ -41,28 +43,30 @@ def askForTimeFrame():
 
     return timeFrame
 
+
 def askPrintTrends(monthlyCompletions):
     """Asks user if they would like to see trends in tasks. Prints
     datatable of trends by month
     """
     printTasks = input(
-        "Would you like to see monthly trends in tasks? [y/N]?\n").lower()
+        "\nWould you like to see monthly trends in tasks? [y/n]: ").lower()
 
     if printTasks == 'y':
         # Print table
         print("\n\t Month     # Created   # Completed")
-        
+
         completionRates = [0]*len(monthlyCompletions)
         for idx, dates in enumerate(monthlyCompletions):
             data = [data for data in dates]
             print("\t%s        %s           %s" % (data[0], data[1], data[2]))
-            completionRates[idx] = round(data[2]/data[1],3)*100
+            completionRates[idx] = round(data[2]/data[1], 3)*100
 
         # Print summary message
-        print("\nYou complete %s %% of your tasks, per month, on average" % np.mean(np.array(completionRates)))
-        
+        print("\nYou complete %s %% of your tasks, per month, on average" %
+              np.mean(np.array(completionRates)))
+
     elif printTasks == 'n':
         pass
     else:
-        print("Please answer with: y or N")
+        print("Please answer with: y or n")
         askPrintTrends(monthlyCompletions)
