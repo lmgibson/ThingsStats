@@ -14,10 +14,10 @@ def askPrintTasks(createdTasks):
         "Would you like to see the created tasks [y/N]?\n").lower()
 
     if printTasks == 'y':
-        print("\n  Date         Task")
+        print("\n\t  Date         Task")
         for taskTuple in createdTasks:
             data = [task for task in taskTuple]
-            print("%s: %s" % (data[0], data[1]))
+            print("\t%s:    %s" % (data[0], data[1]))
     elif printTasks == 'n':
         pass
     else:
@@ -50,16 +50,16 @@ def askPrintTrends(monthlyCompletions):
 
     if printTasks == 'y':
         # Print table
-        print("\n  Month  Tasks Created   Tasks Completed")
+        print("\n\t Month     # Created   # Completed")
         
         completionRates = [0]*len(monthlyCompletions)
         for idx, dates in enumerate(monthlyCompletions):
             data = [data for data in dates]
-            print("%s:        %s           %s" % (data[0], data[1], data[2]))
+            print("\t%s        %s           %s" % (data[0], data[1], data[2]))
             completionRates[idx] = round(data[2]/data[1],3)*100
 
         # Print summary message
-        print("You complete %s %% of your tasks, per month, on average" % np.mean(np.array(completionRates)))
+        print("\nYou complete %s %% of your tasks, per month, on average" % np.mean(np.array(completionRates)))
         
     elif printTasks == 'n':
         pass
