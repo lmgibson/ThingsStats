@@ -1,4 +1,5 @@
 from simple_term_menu import TerminalMenu
+import numpy as np
 
 def askPrintTasks(createdTasks):
     """Asks user if they would like to see the tasks they made
@@ -39,3 +40,29 @@ def askForTimeFrame():
         timeFrame = 6
 
     return timeFrame
+
+def askPrintTrends(monthlyCompletions):
+    """Asks user if they would like to see trends in tasks. Prints
+    datatable of trends by month
+    """
+    printTasks = input(
+        "Would you like to see monthly trends in tasks? [y/N]?\n").lower()
+
+    if printTasks == 'y':
+        # Print table
+        print("\n  Month  Tasks Created   Tasks Completed")
+        
+        completionRates = [0]*len(monthlyCompletions)
+        for idx, dates in enumerate(monthlyCompletions):
+            data = [data for data in dates]
+            print("%s:        %s           %s" % (data[0], data[1], data[2]))
+            completionRates[idx] = round(data[2]/data[1],3)*100
+
+        # Print summary message
+        print("You complete %s %% of your tasks, on average" % np.mean(np.array(completionRates)))
+        
+    elif printTasks == 'n':
+        pass
+    else:
+        print("Please answer with: y or N")
+        askPrintTrends(monthlyCompletions)

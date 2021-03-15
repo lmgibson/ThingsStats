@@ -117,6 +117,6 @@ class statsReport(ThingsData):
                     GROUP BY date
                     ORDER BY date DESC
                     """
-        completedTasks = self.conn.execute(query).fetchall()
+        trends = self.conn.execute(query).fetchall()
 
-        return completedTasks
+        return trends

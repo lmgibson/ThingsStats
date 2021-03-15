@@ -24,7 +24,4 @@ if __name__ == '__main__':
     utilities.askPrintTasks(createdTasks)
 
     # Print trends in task completions
-    print("\n  Month  Tasks Created   Tasks Completed")
-    for dates in monthlyCompletions:
-      data = [data for data in dates]
-      print("%s:        %s           %s" % (data[0], data[1], data[2]))
+    utilities.askPrintTrends(monthlyCompletions)
