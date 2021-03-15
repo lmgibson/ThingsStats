@@ -73,11 +73,15 @@ def askPrintTrends(monthlyCompletions):
         # Print table
         print("\n\t Month     # Created   # Completed")
 
-        completionRates = [0]*len(monthlyCompletions)
-        for idx, dates in enumerate(monthlyCompletions):
+        completionRates = []
+        for dates in monthlyCompletions:
             data = [data for data in dates]
             print("\t%s        %s           %s" % (data[0], data[1], data[2]))
-            completionRates[idx] = round(data[2]/data[1], 3)*100
+            if data[1] != 0:
+                completionRates.append(
+                    round(data[2]/data[1], 3)*100)
+            else:
+                pass
 
         # Print summary message
         print("\nYou complete %s %% of your tasks, per month, on average" %
