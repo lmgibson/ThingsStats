@@ -1,2 +1,3 @@
 conda-env
 .getData.R.icloud
+__pycache__
