@@ -27,16 +27,17 @@ def askPrintTasks(tasksList):
 
 
 def customTimeFrame():
-    customTimeFrame = input("How many days back would you like?: ")
-    try:
-        timeFrame = int(customTimeFrame)
-    except:
-        print("Please enter a number")
-        exit()
-
-    if timeFrame <= 0:
-        print("Please enter a number greater than 0")
-        exit()
+    notValidInput = 1
+    while notValidInput:
+        customTimeFrame = input("How many days back would you like?: ")
+        try:
+            timeFrame = int(customTimeFrame)
+            if timeFrame <= 0:
+                print("Please enter a number greater than 0")
+            elif timeFrame > 0:
+                notValidInput = 0
+        except:
+            print("Please enter a positive number.")
 
     return timeFrame
 
