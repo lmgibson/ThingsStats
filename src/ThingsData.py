@@ -110,7 +110,7 @@ class statsReport(ThingsData):
                     FROM TMTask
                     WHERE trashed = 0
                 )
-                SELECT strftime('%m-%Y', yrMonth) as newDate,
+                SELECT yrMonth,
                        COUNT(yrMonth) as created,
                        SUM(CASE WHEN status = 3 THEN 1
                                 ELSE 0 END)
