@@ -77,12 +77,16 @@ def askPrintTrends(monthlyCompletions):
         completionRates = []
         for dates in monthlyCompletions:
             data = [data for data in dates]
+
+            # Format date as we would like. This is due to limitations of SQlite.
             data[0] = datetime.strptime(data[0], "%Y-%m-%d").strftime("%b-%y")
-            print("\t%s        %s           %s" %
-                  (data[0], data[1], data[2]))
+
+            # Print trends
+            print("\t%s        %s           %s" % (data[0], data[1], data[2]))
+
+            # Calculate completion rate by month-year
             if data[1] != 0:
-                completionRates.append(
-                    round(data[2]/data[1], 3)*100)
+                completionRates.append(round(data[2]/data[1], 3)*100)
             else:
                 pass
 
