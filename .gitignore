@@ -2,3 +2,4 @@ conda-env
 .getData.R.icloud
 __pycache__
 builds
+env

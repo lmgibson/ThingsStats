@@ -91,7 +91,7 @@ def askPrintTrends(monthlyCompletions):
                 pass
 
         # Print summary message
-        print("\nYou complete %s %% of your tasks, per month, on average" %
+        print("\nYou complete %.2f %% of your tasks, per month, on average" %
               np.mean(np.array(completionRates)))
 
     elif printTasks == 'n':
