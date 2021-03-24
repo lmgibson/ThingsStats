@@ -3,3 +3,4 @@ conda-env
 __pycache__
 builds
 env
+.DS_Store
