@@ -59,21 +59,22 @@ class statsReport(ThingsData):
 
     def getNewTasks(self):
         """Fetches any tasks that were created in the past X days
-        but ignores any that are in the trash. 
+        but ignores any that are in the trash.
 
         Returns:
             list: List of tasks where each item is a tuple of info
             for a given task.
         """
         query = """
-                SELECT date(creationDate, 'unixepoch', 'localtime') as date, 
-                        title
+                SELECT date(creationDate, 'unixepoch', 'localtime') as date,
+                        title, uuid
                 FROM TMTask
                 WHERE date BETWEEN datetime('now', '-%s days')
                     AND datetime('now', 'localtime')
                     AND trashed = 0
                 ORDER BY date DESC""" % (self.timeFrame)
         createdTasks = self.conn.execute(query).fetchall()
+        createdTasks = [list(x) for x in createdTasks]
 
         return createdTasks
 
@@ -85,10 +86,10 @@ class statsReport(ThingsData):
             list: A list of tasks that contain a tuple of information
         """
         query = """
-                SELECT date(creationDate, 'unixepoch', 'localtime') as date, 
-                       title, status 
+                SELECT date(creationDate, 'unixepoch', 'localtime') as date,
+                       title, status
                 FROM TMTask
-                WHERE date BETWEEN datetime('now', '-%s days') AND datetime('now', 'localtime') 
+                WHERE date BETWEEN datetime('now', '-%s days') AND datetime('now', 'localtime')
                     AND status = 3
                     AND trashed = 0
                 ORDER BY date DESC""" % (self.timeFrame)

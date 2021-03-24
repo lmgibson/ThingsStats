@@ -1,7 +1,7 @@
 from datetime import datetime
 import numpy as np
 from pywebio.input import select, input, radio
-from pywebio.output import put_text, put_markdown
+from pywebio.output import put_text, put_markdown, put_table, put_link
 
 
 def askPrintTasks(tasksList):
@@ -17,12 +17,11 @@ def askPrintTasks(tasksList):
         "Would you like to see the uncompleted tasks?", options=['Yes', 'No']).lower()
 
     if printTasks == 'yes':
-        put_markdown('# Task List')
-        put_text("\n\t  Date              Task")
-        for taskTuple in tasksList:
-            data = [task for task in taskTuple]
-            put_text("\t%s:    %s" % (data[0], data[1]))
-        put_text("\n")
+        # Formatting Table
+        for i in tasksList:
+            i[2] = "things:///show?id=%s" % i[2]
+        put_markdown('### Task List')
+        put_table(tasksList, header=['Date', 'Title', 'Link'])
     elif printTasks == 'no':
         pass
     else:
@@ -53,7 +52,7 @@ def askForTimeFrame():
     Returns:
         integer: timeframe in integer values 30 for month, 6 for week.
     """
-    menu_choice = select('Timeframe', ['Month', 'Week', 'Custom'])
+    menu_choice = select('Select a timeframe', ['Month', 'Week', 'Custom'])
 
     if menu_choice == 'Month':
         timeFrame = 30
@@ -74,7 +73,7 @@ def askPrintTrends(monthlyCompletions):
 
     if printTasks == 'yes':
         # Print table
-        put_markdown("# Trends")
+        put_markdown("### Trends")
         put_text("\n\t Month     # Created   # Completed")
 
         completionRates = []
@@ -98,7 +97,7 @@ def askPrintTrends(monthlyCompletions):
         put_text("You complete %.2f %% of your tasks, per month, on average" %
                  np.mean(np.array(completionRates)))
 
-    elif printTasks == 'n':
+    elif printTasks == 'no':
         pass
     else:
         print("Please answer with: y or n")

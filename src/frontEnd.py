@@ -1,11 +1,11 @@
 import ThingsData as td
 import utilities
 from datetime import datetime
-from pywebio.output import put_markdown, put_text
+from pywebio import start_server
+from pywebio.output import put_markdown
 
 
-if __name__ == '__main__':
-
+def main():
     # Title
     put_markdown('# Welcome')
 
@@ -19,11 +19,10 @@ if __name__ == '__main__':
     monthlyCompletions = stats.getMonthlyCompletionRate()
 
     # Report to standard output
-    put_text("""
-        In the past %s days you have created %s tasks 
-        of which you have completed %s.\n""" %
-             (timeFrame, len(createdTasks), len(completedTasks)))
-    put_text("\n")
+    put_markdown("""### Stats Overview
+        In the past %s days you have created %s tasks of which you have completed %s.
+        """ %
+                 (timeFrame, len(createdTasks), len(completedTasks)), lstrip=True)
 
     # Ask if user would like to see all uncompleted tasks
     uncompletedTasks = [i for i in createdTasks if i not in completedTasks]
@@ -31,3 +30,7 @@ if __name__ == '__main__':
 
     # Print trends in task completions
     utilities.askPrintTrends(monthlyCompletions)
+
+
+if __name__ == '__main__':
+    main()
