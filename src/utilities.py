@@ -1,6 +1,7 @@
-from simple_term_menu import TerminalMenu
 from datetime import datetime
 import numpy as np
+from pywebio.input import select, input, radio
+from pywebio.output import put_text, put_markdown
 
 
 def askPrintTasks(tasksList):
@@ -12,15 +13,17 @@ def askPrintTasks(tasksList):
         createdTasks (list): list of tuples containing information
         on the tasks that have been created in the past week or month.
     """
-    printTasks = input(
-        "Would you like to see the uncompleted tasks? [y/n]: ").lower()
+    printTasks = radio(
+        "Would you like to see the uncompleted tasks?", options=['Yes', 'No']).lower()
 
-    if printTasks == 'y':
-        print("\n\t  Date            Task")
+    if printTasks == 'yes':
+        put_markdown('# Task List')
+        put_text("\n\t  Date              Task")
         for taskTuple in tasksList:
             data = [task for task in taskTuple]
-            print("\t%s:    %s" % (data[0], data[1]))
-    elif printTasks == 'n':
+            put_text("\t%s:    %s" % (data[0], data[1]))
+        put_text("\n")
+    elif printTasks == 'no':
         pass
     else:
         print("Please answer with: y or N")
@@ -50,12 +53,11 @@ def askForTimeFrame():
     Returns:
         integer: timeframe in integer values 30 for month, 6 for week.
     """
-    print("Please select a timeframe for your report:")
-    terminal_menu = TerminalMenu(["Month", "Week", "Custom"])
-    menu_choice = terminal_menu.show()
-    if menu_choice == 0:
+    menu_choice = select('Timeframe', ['Month', 'Week', 'Custom'])
+
+    if menu_choice == 'Month':
         timeFrame = 30
-    elif menu_choice == 1:
+    elif menu_choice == 'Week':
         timeFrame = 6
     else:
         timeFrame = customTimeFrame()
@@ -67,12 +69,13 @@ def askPrintTrends(monthlyCompletions):
     """Asks user if they would like to see trends in tasks. Prints
     datatable of trends by month
     """
-    printTasks = input(
-        "\nWould you like to see monthly trends in tasks? [y/n]: ").lower()
+    printTasks = radio(
+        "Would you like to see monthly trends in tasks?", options=['Yes', 'No']).lower()
 
-    if printTasks == 'y':
+    if printTasks == 'yes':
         # Print table
-        print("\n\t Month     # Created   # Completed")
+        put_markdown("# Trends")
+        put_text("\n\t Month     # Created   # Completed")
 
         completionRates = []
         for dates in monthlyCompletions:
@@ -82,7 +85,8 @@ def askPrintTrends(monthlyCompletions):
             data[0] = datetime.strptime(data[0], "%Y-%m-%d").strftime("%b-%y")
 
             # Print trends
-            print("\t%s        %s           %s" % (data[0], data[1], data[2]))
+            put_text("\t%s        %s           %s" %
+                     (data[0], data[1], data[2]))
 
             # Calculate completion rate by month-year
             if data[1] != 0:
@@ -91,8 +95,8 @@ def askPrintTrends(monthlyCompletions):
                 pass
 
         # Print summary message
-        print("\nYou complete %.2f %% of your tasks, per month, on average" %
-              np.mean(np.array(completionRates)))
+        put_text("You complete %.2f %% of your tasks, per month, on average" %
+                 np.mean(np.array(completionRates)))
 
     elif printTasks == 'n':
         pass
