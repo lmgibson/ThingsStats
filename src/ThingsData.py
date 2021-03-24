@@ -120,5 +120,6 @@ class statsReport(ThingsData):
                 ORDER BY yrMonth DESC
                 """
         trends = self.conn.execute(query).fetchall()
+        trends = [list(x) for x in trends]
 
         return trends

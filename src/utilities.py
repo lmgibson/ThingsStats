@@ -72,26 +72,23 @@ def askPrintTrends(monthlyCompletions):
         "Would you like to see monthly trends in tasks?", options=['Yes', 'No']).lower()
 
     if printTasks == 'yes':
-        # Print table
-        put_markdown("### Trends")
-        put_text("\n\t Month     # Created   # Completed")
-
         completionRates = []
         for dates in monthlyCompletions:
-            data = [data for data in dates]
-
             # Format date as we would like. This is due to limitations of SQlite.
-            data[0] = datetime.strptime(data[0], "%Y-%m-%d").strftime("%b-%y")
-
-            # Print trends
-            put_text("\t%s        %s           %s" %
-                     (data[0], data[1], data[2]))
+            dates[0] = datetime.strptime(
+                dates[0], "%Y-%m-%d").strftime("%b-%y")
 
             # Calculate completion rate by month-year
-            if data[1] != 0:
-                completionRates.append(round(data[2]/data[1], 3)*100)
+            if dates[1] != 0:
+                completionRates.append(round(dates[2]/dates[1], 3)*100)
             else:
                 pass
+
+        # Print table
+        put_markdown("### Trends")
+        print(monthlyCompletions)
+        put_table(monthlyCompletions, header=[
+                  'Month', '# Created', '# Completed'])
 
         # Print summary message
         put_text("You complete %.2f %% of your tasks, per month, on average" %
