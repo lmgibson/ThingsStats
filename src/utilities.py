@@ -19,9 +19,10 @@ def askPrintTasks(tasksList):
     if printTasks == 'yes':
         # Formatting Table
         for i in tasksList:
-            i[2] = "things:///show?id=%s" % i[2]
+            i[1] = put_link(i[1], "things:///show?id=%s" % i[2])
+            _ = i.pop()
         put_markdown('### Task List')
-        put_table(tasksList, header=['Date', 'Title', 'Link'])
+        put_table(tasksList, header=['Date', 'Title'])
     elif printTasks == 'no':
         pass
     else:
