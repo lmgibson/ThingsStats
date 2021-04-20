@@ -71,8 +71,55 @@ def askForTimeFrame():
     return timeFrame
 
 
+def collectTaskCountsByMonth(taskList):
+    """
+    Takes in a list of tasks and returns a sorted table counting the 
+    number of tasks created in each month and the number completed
+    in each month.
+
+    Args:
+        allTasks ([list of dicts]): A list of dictionaries where each
+        dictionary is a task.
+
+    Returns:
+        [list of dicts]: Returns a sorted list of dictionaries that
+        has information on the # of tasks created by year-month and
+        # completed.
+    """
+
+    yearMonth = [datetime.strptime(
+        i['created'], '%Y-%m-%d %H:%M:%S').strftime('%Y-%m') for i in taskList]
+
+    yearMonthCompleted = [datetime.strptime(
+        i['created'], '%Y-%m-%d %H:%M:%S').strftime('%Y-%m') for i in taskList if i['status'] == 'completed']
+
+    countDict = {}
+    for i in yearMonth:
+        countDict[i] = yearMonth.count(i)
+
+    completedCountDict = {}
+    for i in yearMonthCompleted:
+        completedCountDict[i] = yearMonthCompleted.count(i)
+
+    combinedCountsListDict = []
+    for i, val in enumerate(countDict):
+        combinedCountsListDict.append({'YearMonth': val, 'Count': countDict[val],
+                                       'CountCompleted': completedCountDict[val],
+                                       'Year': int(val[0:4]), 'Month': int(val[5:7])})
+
+    sortedTable = sorted(
+        combinedCountsListDict, key=lambda x: (x['Year'], x['Month']), reverse=True)
+
+    for i in sortedTable:
+        del i['Year']
+        del i['Month']
+
+    return sortedTable
+
+
 def askPrintTrends():
-    """Asks user if they would like to see trends in tasks. Prints
+    """
+    Asks user if they would like to see trends in tasks. Prints
     datatable of trends by month
     """
     printTasks = radio(
@@ -81,32 +128,11 @@ def askPrintTrends():
     if printTasks == 'Yes':
         allTasks = things.tasks(type='to-do', status=None, index='todayIndex')
 
-        monthlyCompletions = {'yrMonth': [], 'Count': [], 'CountCompleted': []}
-        for i in allTasks:
-            createdDate = datetime.strptime(i['created'], '%Y-%m-%d %H:%M:%S')
-            yearMonth = createdDate.strftime("%Y-%m")
+        tasksCountsByMonth = collectTaskCountsByMonth(allTasks)
+        tableColumnNames = list(tasksCountsByMonth[0].keys())
 
-            if yearMonth in monthlyCompletions['yrMonth']:
-                monthlyCompletions['Count'][monthlyCompletions['yrMonth'].index(
-                    yearMonth)] += 1
-                if i['status'] == "completed":
-                    monthlyCompletions['CountCompleted'][monthlyCompletions['yrMonth'].index(
-                        yearMonth)] += 1
-            else:
-                monthlyCompletions['yrMonth'].append(yearMonth)
-                monthlyCompletions['Count'].append(1)
-                if i['status'] == "completed":
-                    monthlyCompletions['CountCompleted'].append(1)
-
-        # Print table
         put_markdown("### Trends")
-        put_text("Date          Count            Count Completed")
-        for i in range(0, len(monthlyCompletions['yrMonth'])):
-            put_text("%s %s %s" % (
-                monthlyCompletions['yrMonth'][i], monthlyCompletions['Count'][i], monthlyCompletions['CountCompleted'][i]))
-        # Print summary message
-        # put_text("You complete %.2f %% of your tasks, per month, on average" %
-        #  np.mean(np.array(completionRates)))
+        put_table(tasksCountsByMonth, header=tableColumnNames)
 
     elif printTasks == 'No':
         pass
