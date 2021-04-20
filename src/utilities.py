@@ -19,9 +19,13 @@ def askPrintTasks(tasksList):
         "Would you like to see the uncompleted tasks?", options=['Yes', 'No'])
 
     if printTasks == 'Yes':
+        # Sort Tasks by Date
+        sortedTable = sorted(
+            tasksList, key=lambda e: e['created'], reverse=True)
+
         # Formatting Table
         tableList = []
-        for i in tasksList:
+        for i in sortedTable:
             tableList.append([i['created'], put_link(
                 i['title'], "things:///show?id=%s" % i['uuid'])])
             # i[1] = put_link(i['created'], "things:///show?id=%s" % i['uuid'])
