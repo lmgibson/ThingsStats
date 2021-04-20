@@ -79,9 +79,9 @@ def askPrintTrends():
         "Would you like to see monthly trends in tasks?", options=['Yes', 'No'])
 
     if printTasks == 'Yes':
-        allTasks = things.tasks(type='to-do', status=None)
+        allTasks = things.tasks(type='to-do', status=None, index='todayIndex')
 
-        monthlyCompletions = []
+        monthlyCompletions = {'yrMonth': [], 'Count': [], 'CountCompleted': []}
         for i in allTasks:
             createdDate = datetime.strptime(i['created'], '%Y-%m-%d %H:%M:%S')
             yearMonth = createdDate.strftime("%Y-%m")
@@ -100,9 +100,10 @@ def askPrintTrends():
 
         # Print table
         put_markdown("### Trends")
-        put_table(monthlyCompletions, header=[
-                  'Month', '# Created', '# Completed'])
-
+        put_text("Date          Count            Count Completed")
+        for i in range(0, len(monthlyCompletions['yrMonth'])):
+            put_text("%s %s %s" % (
+                monthlyCompletions['yrMonth'][i], monthlyCompletions['Count'][i], monthlyCompletions['CountCompleted'][i]))
         # Print summary message
         # put_text("You complete %.2f %% of your tasks, per month, on average" %
         #  np.mean(np.array(completionRates)))
