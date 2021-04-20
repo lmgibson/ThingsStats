@@ -14,8 +14,8 @@ def main():
     timeFrame = utilities.askForTimeFrame()
 
     # Get stats
-    allTasks = things.tasks(last=timeFrame, status=None,
-                            trashed=False, type='to-do', count_only=True)
+    totalTaskCount = things.tasks(last=timeFrame, status=None,
+                                  trashed=False, type='to-do', count_only=True)
     completedTasks = things.tasks(
         last=timeFrame, status='completed', type='to-do')
     incompleteTasks = things.tasks(
@@ -25,7 +25,7 @@ def main():
     put_markdown("""### Stats Overview
         In the past %s days you have created %s tasks of which you have completed %s.
         """ %
-                 (timeFrame, allTasks, len(completedTasks)), lstrip=True)
+                 (timeFrame, totalTaskCount, len(completedTasks)), lstrip=True)
 
     # Ask if user would like to see all uncompleted tasks
     utilities.askPrintTasks(incompleteTasks)

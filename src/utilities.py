@@ -122,7 +122,7 @@ def collectTaskCountsByMonth(taskList):
 def askPrintTrends():
     """
     Asks user if they would like to see trends in tasks. Prints
-    datatable of trends by month
+    datatable of trends by month sorted by year/month
     """
     printTasks = radio(
         "Would you like to see monthly trends in tasks?", options=['Yes', 'No'])
