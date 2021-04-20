@@ -95,11 +95,13 @@ def collectTaskCountsByMonth(taskList):
 
     countDict = {}
     for i in yearMonth:
-        countDict[i] = yearMonth.count(i)
+        if i not in countDict.keys():
+            countDict[i] = yearMonth.count(i)
 
     completedCountDict = {}
     for i in yearMonthCompleted:
-        completedCountDict[i] = yearMonthCompleted.count(i)
+        if i not in completedCountDict.keys():
+            completedCountDict[i] = yearMonthCompleted.count(i)
 
     combinedCountsListDict = []
     for i, val in enumerate(countDict):
