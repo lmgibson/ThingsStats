@@ -81,10 +81,11 @@ def askPrintTrends():
     if printTasks == 'Yes':
         allTasks = things.tasks(type='to-do', status=None)
 
-        monthlyCompletions = {'yrMonth': [], 'Count': [], 'CountCompleted': []}
+        monthlyCompletions = []
         for i in allTasks:
             createdDate = datetime.strptime(i['created'], '%Y-%m-%d %H:%M:%S')
             yearMonth = createdDate.strftime("%Y-%m")
+
             if yearMonth in monthlyCompletions['yrMonth']:
                 monthlyCompletions['Count'][monthlyCompletions['yrMonth'].index(
                     yearMonth)] += 1
@@ -110,4 +111,4 @@ def askPrintTrends():
         pass
     else:
         put_text("Please answer with: 'Yes' or 'No'")
-        askPrintTrends(monthlyCompletions)
+        askPrintTrends()
