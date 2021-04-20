@@ -64,7 +64,7 @@ def askForTimeFrame():
     if menu_choice == 'Month':
         timeFrame = "30d"
     elif menu_choice == 'Week':
-        timeFrame = "1w"
+        timeFrame = "7d"
     else:
         timeFrame = str(customTimeFrame()) + "d"
 
