@@ -1,4 +1,5 @@
-import ThingsData as td
+from typing import Counter
+import things
 import utilities
 from datetime import datetime
 from pywebio import start_server
@@ -13,23 +14,24 @@ def main():
     timeFrame = utilities.askForTimeFrame()
 
     # Get stats
-    stats = td.statsReport(timeFrame)
-    createdTasks = stats.getNewTasks()
-    completedTasks = stats.getRecentCompletedTasks()
-    monthlyCompletions = stats.getMonthlyCompletionRate()
+    allTasks = things.tasks(last=timeFrame, status=None,
+                            trashed=False, type='to-do', count_only=True)
+    completedTasks = things.tasks(
+        last=timeFrame, status='completed', type='to-do')
+    incompleteTasks = things.tasks(
+        last=timeFrame, status='incomplete', type='to-do')
 
     # Report to standard output
     put_markdown("""### Stats Overview
         In the past %s days you have created %s tasks of which you have completed %s.
         """ %
-                 (timeFrame, len(createdTasks), len(completedTasks)), lstrip=True)
+                 (timeFrame, allTasks, len(completedTasks)), lstrip=True)
 
     # Ask if user would like to see all uncompleted tasks
-    uncompletedTasks = [i for i in createdTasks if i not in completedTasks]
-    utilities.askPrintTasks(uncompletedTasks)
+    utilities.askPrintTasks(incompleteTasks)
 
     # Print trends in task completions
-    utilities.askPrintTrends(monthlyCompletions)
+    utilities.askPrintTrends()
 
 
 if __name__ == '__main__':

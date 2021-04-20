@@ -1,11 +1,13 @@
 from datetime import datetime
+import things
 import numpy as np
 from pywebio.input import select, input, radio
 from pywebio.output import put_text, put_markdown, put_table, put_link
 
 
 def askPrintTasks(tasksList):
-    """Asks user if they would like to see the tasks they made
+    """
+    Asks user if they would like to see the tasks they made
     in the past week. Will repeat until the user answers yes
     or no.
 
@@ -14,19 +16,22 @@ def askPrintTasks(tasksList):
         on the tasks that have been created in the past week or month.
     """
     printTasks = radio(
-        "Would you like to see the uncompleted tasks?", options=['Yes', 'No']).lower()
+        "Would you like to see the uncompleted tasks?", options=['Yes', 'No'])
 
-    if printTasks == 'yes':
+    if printTasks == 'Yes':
         # Formatting Table
+        tableList = []
         for i in tasksList:
-            i[1] = put_link(i[1], "things:///show?id=%s" % i[2])
-            _ = i.pop()
+            tableList.append([i['created'], put_link(
+                i['title'], "things:///show?id=%s" % i['uuid'])])
+            # i[1] = put_link(i['created'], "things:///show?id=%s" % i['uuid'])
+            # _ = i.pop()
         put_markdown('### Task List')
-        put_table(tasksList, header=['Date', 'Title'])
-    elif printTasks == 'no':
+        put_table(tableList, header=['Date', 'Title'])
+    elif printTasks == 'No':
         pass
     else:
-        print("Please answer with: y or N")
+        put_text("Please answer with: 'Yes' or 'No'")
         askPrintTasks(tasksList)
 
 
@@ -47,7 +52,8 @@ def customTimeFrame():
 
 
 def askForTimeFrame():
-    """Presents a terminal list so the user can select their
+    """
+    Presents a terminal list so the user can select their
     timeframe of analysis.
 
     Returns:
@@ -56,47 +62,52 @@ def askForTimeFrame():
     menu_choice = select('Select a timeframe', ['Month', 'Week', 'Custom'])
 
     if menu_choice == 'Month':
-        timeFrame = 30
+        timeFrame = "30d"
     elif menu_choice == 'Week':
-        timeFrame = 6
+        timeFrame = "1w"
     else:
-        timeFrame = customTimeFrame()
+        timeFrame = str(customTimeFrame()) + "d"
 
     return timeFrame
 
 
-def askPrintTrends(monthlyCompletions):
+def askPrintTrends():
     """Asks user if they would like to see trends in tasks. Prints
     datatable of trends by month
     """
     printTasks = radio(
-        "Would you like to see monthly trends in tasks?", options=['Yes', 'No']).lower()
+        "Would you like to see monthly trends in tasks?", options=['Yes', 'No'])
 
-    if printTasks == 'yes':
-        completionRates = []
-        for dates in monthlyCompletions:
-            # Format date as we would like. This is due to limitations of SQlite.
-            dates[0] = datetime.strptime(
-                dates[0], "%Y-%m-%d").strftime("%b-%y")
+    if printTasks == 'Yes':
+        allTasks = things.tasks(type='to-do', status=None)
 
-            # Calculate completion rate by month-year
-            if dates[1] != 0:
-                completionRates.append(round(dates[2]/dates[1], 3)*100)
+        monthlyCompletions = {'yrMonth': [], 'Count': [], 'CountCompleted': []}
+        for i in allTasks:
+            createdDate = datetime.strptime(i['created'], '%Y-%m-%d %H:%M:%S')
+            yearMonth = createdDate.strftime("%Y-%m")
+            if yearMonth in monthlyCompletions['yrMonth']:
+                monthlyCompletions['Count'][monthlyCompletions['yrMonth'].index(
+                    yearMonth)] += 1
+                if i['status'] == "completed":
+                    monthlyCompletions['CountCompleted'][monthlyCompletions['yrMonth'].index(
+                        yearMonth)] += 1
             else:
-                pass
+                monthlyCompletions['yrMonth'].append(yearMonth)
+                monthlyCompletions['Count'].append(1)
+                if i['status'] == "completed":
+                    monthlyCompletions['CountCompleted'].append(1)
 
         # Print table
         put_markdown("### Trends")
-        print(monthlyCompletions)
         put_table(monthlyCompletions, header=[
                   'Month', '# Created', '# Completed'])
 
         # Print summary message
-        put_text("You complete %.2f %% of your tasks, per month, on average" %
-                 np.mean(np.array(completionRates)))
+        # put_text("You complete %.2f %% of your tasks, per month, on average" %
+        #  np.mean(np.array(completionRates)))
 
-    elif printTasks == 'no':
+    elif printTasks == 'No':
         pass
     else:
-        print("Please answer with: y or n")
+        put_text("Please answer with: 'Yes' or 'No'")
         askPrintTrends(monthlyCompletions)
