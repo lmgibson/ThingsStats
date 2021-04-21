@@ -14,12 +14,12 @@ def main():
     timeFrame = utilities.askForTimeFrame()
 
     # Get stats
-    totalTaskCount = things.tasks(last=timeFrame, status=None,
-                                  trashed=False, type='to-do', count_only=True)
-    completedTasks = things.tasks(
-        last=timeFrame, status='completed', type='to-do')
-    incompleteTasks = things.tasks(
-        last=timeFrame, status='incomplete', type='to-do')
+    totalTaskCount = things.todos(last=timeFrame, status=None,
+                                  trashed=False, count_only=True)
+    completedTasks = things.todos(
+        last=timeFrame, status='completed')
+    incompleteTasks = things.todos(
+        last=timeFrame, status='incomplete')
 
     # Report to standard output
     put_markdown("""### Stats Overview
