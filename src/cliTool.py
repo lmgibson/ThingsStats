@@ -34,7 +34,7 @@ def askWhatNext(incompleteTasks, console):
         exit()
 
 
-def main():
+if __name__ == "__main__":
     console = Console()
 
     # Get requested timeframe
@@ -62,7 +62,3 @@ def main():
 
     # What would you like to do next
     askWhatNext(incompleteTasks, console)
-
-
-if __name__ == "__main__":
-    main()
