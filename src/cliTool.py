@@ -1,7 +1,5 @@
-from typing import Counter
 import things
 import utilities
-from datetime import datetime
 from PyInquirer import prompt
 from rich.console import Console
 from rich.table import Table
