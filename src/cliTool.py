@@ -6,5 +6,5 @@ from PyInquirer import prompt
 
 
 if __name__ == "__main__":
-    answers = utilities.askForTimeFrame()
-    print(answers)
+    timeFrame = utilities.askForTimeFrame()
+    print(timeFrame)

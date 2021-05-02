@@ -39,19 +39,30 @@ def askPrintTasks(tasksList):
 
 
 def customTimeFrame():
-    notValidInput = 1
-    while notValidInput:
-        customTimeFrame = input("How many days back would you like?: ")
-        try:
-            timeFrame = int(customTimeFrame)
-            if timeFrame <= 0:
-                print("Please enter a number greater than 0")
-            elif timeFrame > 0:
-                notValidInput = 0
-        except:
-            print("Please enter a positive number.")
+    questions = [
+        {
+            'type': 'input',
+            'name': 'daysBack',
+            'message': 'How many days back would you like?:',
+            'validate': lambda val: int(val) >= 0
+        }
+    ]
 
-    return timeFrame
+    answers = prompt(questions)
+
+    # notValidInput = 1
+    # while notValidInput:
+    #     customTimeFrame = input("How many days back would you like?: ")
+    #     try:
+    #         timeFrame = int(customTimeFrame)
+    #         if timeFrame <= 0:
+    #             print("Please enter a number greater than 0")
+    #         elif timeFrame > 0:
+    #             notValidInput = 0
+    #     except:
+    #         print("Please enter a positive number.")
+
+    return answers['daysBack']
 
 
 def askForTimeFrame():
@@ -77,16 +88,14 @@ def askForTimeFrame():
     ]
     answers = prompt(questions)
 
-    # menu_choice = select('Select a timeframe', ['Month', 'Week', 'Custom'])
+    if answers['timeframe'] == 'Month':
+        timeFrame = "30d"
+    elif answers['timeframe'] == 'Week':
+        timeFrame = "7d"
+    else:
+        timeFrame = str(customTimeFrame()) + "d"
 
-    # if menu_choice == 'Month':
-    #     timeFrame = "30d"
-    # elif menu_choice == 'Week':
-    #     timeFrame = "7d"
-    # else:
-    #     timeFrame = str(customTimeFrame()) + "d"
-
-    return answers
+    return timeFrame
 
 
 def collectTaskCountsByMonth(taskList):
