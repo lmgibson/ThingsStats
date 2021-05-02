@@ -15,6 +15,7 @@ def askWhatNext(incompleteTasks, console):
                 'Incomplete tasks',
                 'Monthly completion rate',
                 'Select new days back',
+                'Get incomplete by project',
                 'exit'
             ]
         }
@@ -31,6 +32,9 @@ def askWhatNext(incompleteTasks, console):
         askWhatNext(incompleteTasks, console)
     elif next == 'Select new days back':
         main()
+    elif next == 'Get incomplete by project':
+        utilities.getIncompleteByProject(console)
+        askWhatNext(incompleteTasks, console)
     elif next == 'exit':
         exit()
 

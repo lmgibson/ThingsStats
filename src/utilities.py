@@ -1,7 +1,8 @@
-from datetime import datetime
 import things
 from PyInquirer import prompt
 from rich.table import Table
+from collections import Counter
+from datetime import datetime
 
 
 def askForTimeFrame():
@@ -47,54 +48,6 @@ def askForTimeFrame():
         )
 
     return timeFrame
-
-
-def collectTaskCountsByMonth(taskList):
-    """
-    Takes in a list of tasks and returns a sorted table counting the
-    number of tasks created in each month and the number completed
-    in each month.
-
-    Args:
-        allTasks ([list of dicts]): A list of dictionaries where each
-        dictionary is a task.
-
-    Returns:
-        [list of dicts]: Returns a sorted list of dictionaries that
-        has information on the # of tasks created by year-month and
-        # completed.
-    """
-
-    yearMonth = [datetime.strptime(
-        i['created'], '%Y-%m-%d %H:%M:%S').strftime('%Y-%m') for i in taskList]
-
-    yearMonthCompleted = [datetime.strptime(
-        i['created'], '%Y-%m-%d %H:%M:%S').strftime('%Y-%m') for i in taskList if i['status'] == 'completed']
-
-    countDict = {}
-    for i in yearMonth:
-        if i not in countDict.keys():
-            countDict[i] = yearMonth.count(i)
-
-    completedCountDict = {}
-    for i in yearMonthCompleted:
-        if i not in completedCountDict.keys():
-            completedCountDict[i] = yearMonthCompleted.count(i)
-
-    combinedCountsListDict = []
-    for i, val in enumerate(countDict):
-        combinedCountsListDict.append({'YearMonth': val, 'Count': countDict[val],
-                                       'CountCompleted': completedCountDict[val],
-                                       'Year': int(val[0:4]), 'Month': int(val[5:7])})
-
-    sortedTable = sorted(
-        combinedCountsListDict, key=lambda x: (x['Year'], x['Month']), reverse=True)
-
-    for i in sortedTable:
-        del i['Year']
-        del i['Month']
-
-    return sortedTable
 
 
 def printIncompleteTasks(tasksList, console):
@@ -149,6 +102,109 @@ def printTrends(console):
                       str(i['Count']),
                       str(i['CountCompleted']),
                       str(completionRate) + "%")
+
+    print("\n")
+    console.print(table)
+    print("\n")
+
+
+def collectTaskCountsByMonth(taskList):
+    """
+    Takes in a list of tasks and returns a sorted table counting the
+    number of tasks created in each month and the number completed
+    in each month.
+
+    Args:
+        allTasks ([list of dicts]): A list of dictionaries where each
+        dictionary is a task.
+
+    Returns:
+        [list of dicts]: Returns a sorted list of dictionaries that
+        has information on the # of tasks created by year-month and
+        # completed.
+    """
+
+    yearMonth = [datetime.strptime(
+        i['created'], '%Y-%m-%d %H:%M:%S').strftime('%Y-%m') for i in taskList]
+
+    yearMonthCompleted = [datetime.strptime(
+        i['created'], '%Y-%m-%d %H:%M:%S').strftime('%Y-%m') for i in taskList if i['status'] == 'completed']
+
+    countDict = {}
+    for i in yearMonth:
+        if i not in countDict.keys():
+            countDict[i] = yearMonth.count(i)
+
+    completedCountDict = {}
+    for i in yearMonthCompleted:
+        if i not in completedCountDict.keys():
+            completedCountDict[i] = yearMonthCompleted.count(i)
+
+    combinedCountsListDict = []
+    for i, val in enumerate(countDict):
+        combinedCountsListDict.append({'YearMonth': val, 'Count': countDict[val],
+                                       'CountCompleted': completedCountDict[val],
+                                       'Year': int(val[0:4]), 'Month': int(val[5:7])})
+
+    sortedTable = sorted(
+        combinedCountsListDict, key=lambda x: (x['Year'], x['Month']), reverse=True)
+
+    for i in sortedTable:
+        del i['Year']
+        del i['Month']
+
+    return sortedTable
+
+
+def getIncompleteByProject(console):
+    """
+    Presents counts of incomplete todos by project title
+    """
+
+    allTasks = things.todos(status=None)
+
+    # Total Todos per project
+    allProjectTitles = [i['project_title']
+                        if 'project_title' in i else 'No Project' for i in allTasks]
+    totalToDosPerProject = Counter(allProjectTitles)
+
+    # Completed Todos per project
+    completedProjectTitles = []
+    for i in allTasks:
+        if i['status'] == 'completed' and 'project_title' in i:
+            completedProjectTitles.append(i['project_title'])
+        elif i['status'] == 'completed' and 'project_title' not in i:
+            completedProjectTitles.append('No Project')
+    completedToDosPerProject = Counter(completedProjectTitles)
+
+    # Combining Counts
+    combinedCounts = {}
+    for i in totalToDosPerProject:
+        if i in completedToDosPerProject:
+            combinedCounts[i] = [
+                totalToDosPerProject[i],
+                completedToDosPerProject[i],
+                totalToDosPerProject[i] - completedToDosPerProject[i]
+            ]
+        else:
+            combinedCounts[i] = [totalToDosPerProject[i], 0, 0]
+    console.print(combinedCounts)
+
+    # Calculating Order by num not completed
+    ordered = sorted(combinedCounts.items(),
+                     key=lambda val: val[1][2], reverse=True)
+
+    # Creating table for printing
+
+    table = Table(title="Tasks by Project")
+    table.add_column("Project", justify="left")
+    table.add_column("# Todos", justify="center")
+    table.add_column("# Incomplete", justify="center")
+
+    for i in ordered:
+        table.add_row(i[0],
+                      str(i[1][0]),
+                      str(i[1][2]))
 
     print("\n")
     console.print(table)
