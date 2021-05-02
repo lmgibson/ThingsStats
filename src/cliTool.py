@@ -14,6 +14,7 @@ def askWhatNext(incompleteTasks, console):
             'choices': [
                 'Incomplete tasks',
                 'Monthly completion rate',
+                'Select new days back',
                 'exit'
             ]
         }
@@ -28,11 +29,13 @@ def askWhatNext(incompleteTasks, console):
         # Print trends in task completions
         utilities.printTrends(console)
         askWhatNext(incompleteTasks, console)
+    elif next == 'Select new days back':
+        main()
     elif next == 'exit':
         exit()
 
 
-if __name__ == "__main__":
+def main():
     console = Console()
 
     # Get requested timeframe
@@ -60,3 +63,7 @@ if __name__ == "__main__":
 
     # What would you like to do next
     askWhatNext(incompleteTasks, console)
+
+
+if __name__ == "__main__":
+    main()
