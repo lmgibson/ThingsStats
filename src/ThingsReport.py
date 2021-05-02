@@ -2,7 +2,6 @@ import things
 import utilities
 from PyInquirer import prompt, Separator
 from rich.console import Console
-from rich.table import Table
 
 
 def askWhatNext(incompleteTasks, console):
@@ -88,9 +87,9 @@ def main():
 
     # Report to standard output
     report = """
-          :raccoon: Stats Overview :raccoon: 
+          :raccoon: Stats Overview :raccoon:
     ------------------------------------
-    In the past %s days you have [bold red]created[/bold red] %s 
+    In the past %s days you have [bold red]created[/bold red] %s
     tasks of which you have [bold red]completed[/bold red] %s.
     """ % (timeFrame[:-1],
            totalTaskCount,
