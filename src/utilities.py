@@ -44,7 +44,8 @@ def customTimeFrame():
             'type': 'input',
             'name': 'daysBack',
             'message': 'How many days back would you like?:',
-            'validate': lambda val: int(val) >= 0
+            'default': lambda answers: '7',
+            'validate': lambda val: int(val) > 0
         }
     ]
 
