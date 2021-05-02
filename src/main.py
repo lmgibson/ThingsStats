@@ -1,5 +1,6 @@
 import click
 import ThingsReport
+import ThingsAddDaily
 
 
 @click.group()
@@ -16,15 +17,13 @@ def report():
 
 
 @click.command()
-def hello():
-    """
-    Prints hello.
-    """
-    print("Hello!")
+@click.argument('message')
+def add(message):
+    ThingsAddDaily.main(message)
 
 
 things.add_command(report)
-things.add_command(hello)
+things.add_command(add)
 
 
 if __name__ == '__main__':
