@@ -1,11 +1,13 @@
 from datetime import datetime
 import things
 import numpy as np
-from pywebio.input import select, input, radio
-from pywebio.output import put_text, put_markdown, put_table, put_link
+from PyInquirer import prompt
+from rich.console import Console
+from rich.table import Table
+import cliTool
 
 
-def askPrintTasks(tasksList):
+def askPrintTasks(tasksList, console):
     """
     Asks user if they would like to see the tasks they made
     in the past week. Will repeat until the user answers yes
@@ -15,44 +17,63 @@ def askPrintTasks(tasksList):
         createdTasks (list): list of tuples containing information
         on the tasks that have been created in the past week or month.
     """
-    printTasks = radio(
-        "Would you like to see the uncompleted tasks?", options=['Yes', 'No'])
 
-    if printTasks == 'Yes':
+    questions = [
+        {
+            'type': 'list',
+            'name': 'printIncompleTasks',
+            'message': 'Would you like to see the uncompleted tasks?',
+            'choices': [
+                'Yes',
+                'No',
+            ]
+        }
+    ]
+    answers = prompt(questions)
+
+    if answers['printIncompleTasks'] == 'Yes':
         # Sort Tasks by Date
         sortedTable = sorted(
             tasksList, key=lambda e: e['created'], reverse=True)
 
-        # Formatting Table
-        tableList = []
+        table = Table(title="Incomplete Tasks")
+        table.add_column("Project", justify="center")
+        table.add_column("Date Created", justify="center")
+        table.add_column("Title", justify="center")
+        table.add_column("URL")
+
         for i in sortedTable:
-            tableList.append([i['created'], put_link(
-                i['title'], "things:///show?id=%s" % i['uuid'])])
-            # i[1] = put_link(i['created'], "things:///show?id=%s" % i['uuid'])
-            # _ = i.pop()
-        put_markdown('### Task List')
-        put_table(tableList, header=['Date', 'Title'])
-    elif printTasks == 'No':
+            url = f"things:///show?id={i['uuid']}"
+            table.add_row(i['project_title'],
+                          i['created'][0:10],
+                          i['title'],
+                          url)
+
+        print("\n")
+        console.print(table)
+        print("\n")
+
+    elif answers['printIncompleTasks'] == 'No':
         pass
     else:
-        put_text("Please answer with: 'Yes' or 'No'")
+        console.print("Please answer with: 'Yes' or 'No'")
         askPrintTasks(tasksList)
 
 
 def customTimeFrame():
-    notValidInput = 1
-    while notValidInput:
-        customTimeFrame = input("How many days back would you like?: ")
-        try:
-            timeFrame = int(customTimeFrame)
-            if timeFrame <= 0:
-                print("Please enter a number greater than 0")
-            elif timeFrame > 0:
-                notValidInput = 0
-        except:
-            print("Please enter a positive number.")
+    questions = [
+        {
+            'type': 'input',
+            'name': 'daysBack',
+            'message': 'How many days back would you like?:',
+            'default': lambda answers: '7',
+            'validate': lambda val: int(val) > 0
+        }
+    ]
 
-    return timeFrame
+    answers = prompt(questions)
+
+    return answers['daysBack']
 
 
 def askForTimeFrame():
@@ -63,11 +84,24 @@ def askForTimeFrame():
     Returns:
         integer: timeframe in integer values 30 for month, 6 for week.
     """
-    menu_choice = select('Select a timeframe', ['Month', 'Week', 'Custom'])
 
-    if menu_choice == 'Month':
+    questions = [
+        {
+            'type': 'list',
+            'name': 'timeframe',
+            'message': 'How many days back?',
+            'choices': [
+                'Month',
+                'Week',
+                'Custom',
+            ]
+        }
+    ]
+    answers = prompt(questions)
+
+    if answers['timeframe'] == 'Month':
         timeFrame = "30d"
-    elif menu_choice == 'Week':
+    elif answers['timeframe'] == 'Week':
         timeFrame = "7d"
     else:
         timeFrame = str(customTimeFrame()) + "d"
@@ -77,7 +111,7 @@ def askForTimeFrame():
 
 def collectTaskCountsByMonth(taskList):
     """
-    Takes in a list of tasks and returns a sorted table counting the 
+    Takes in a list of tasks and returns a sorted table counting the
     number of tasks created in each month and the number completed
     in each month.
 
@@ -123,25 +157,67 @@ def collectTaskCountsByMonth(taskList):
     return sortedTable
 
 
-def askPrintTrends():
+def askPrintTrends(console):
     """
     Asks user if they would like to see trends in tasks. Prints
     datatable of trends by month sorted by year/month
     """
-    printTasks = radio(
-        "Would you like to see monthly trends in tasks?", options=['Yes', 'No'])
 
-    if printTasks == 'Yes':
+    questions = [
+        {
+            'type': 'list',
+            'name': 'printTrends',
+            'message': 'Would you like to see monthly trends in tasks?',
+            'choices': [
+                'Yes',
+                'No',
+            ]
+        }
+    ]
+    answers = prompt(questions)
+
+    if answers['printTrends'] == 'Yes':
         allTasks = things.tasks(type='to-do', status=None, index='todayIndex')
 
         tasksCountsByMonth = collectTaskCountsByMonth(allTasks)
-        tableColumnNames = list(tasksCountsByMonth[0].keys())
+        table = Table(title="Monthly Task Completion Rate")
+        table.add_column("Date", justify="center")
+        table.add_column("Number Created", justify="center")
+        table.add_column("Number Completed", justify="center")
+        table.add_column("Percent Completed", justify="center")
 
-        put_markdown("### Trends")
-        put_table(tasksCountsByMonth, header=tableColumnNames)
+        for i in tasksCountsByMonth:
+            completionRate = round((i['CountCompleted']/i['Count']) * 100, 0)
+            table.add_row(i['YearMonth'],
+                          str(i['Count']),
+                          str(i['CountCompleted']),
+                          str(completionRate) + "%")
 
-    elif printTasks == 'No':
+        print("\n")
+        console.print(table)
+        print("\n")
+    elif answers['printTrends'] == 'No':
         pass
     else:
-        put_text("Please answer with: 'Yes' or 'No'")
+        console.print("Please answer with: 'Yes' or 'No'")
         askPrintTrends()
+
+
+def askStartAgain():
+    questions = [
+        {
+            'type': 'list',
+            'name': 'startAgain',
+            'message': 'Would you like to do that again?',
+            'choices': [
+                'Yes',
+                'No',
+            ],
+            'default': 'No'
+        }
+    ]
+    answers = prompt(questions)
+
+    if answers['startAgain'] == 'Yes':
+        print("\n")
+        cliTool.main()
