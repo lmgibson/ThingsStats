@@ -11,7 +11,7 @@ def things():
 @click.command()
 def report():
     """
-    Initializes interactive reporting
+    Interactive reporting
     """
     ThingsReport.main()
 
@@ -19,6 +19,9 @@ def report():
 @click.command()
 @click.argument('message')
 def add(message):
+    """
+    Adds a checklist item to a daily todo tracker
+    """
     ThingsAddDaily.main(message)
 
 
