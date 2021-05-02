@@ -7,7 +7,7 @@ from rich.console import Console
 from rich.table import Table
 
 
-if __name__ == "__main__":
+def main():
     console = Console()
 
     # Get requested timeframe
@@ -37,4 +37,11 @@ if __name__ == "__main__":
     utilities.askPrintTasks(incompleteTasks, console)
 
     # Print trends in task completions
-    # utilities.askPrintTrends()
+    utilities.askPrintTrends(console)
+
+    # Ask if they would like to explore another date (loops back to start)
+    utilities.askStartAgain()
+
+
+if __name__ == "__main__":
+    main()

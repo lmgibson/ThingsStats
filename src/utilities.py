@@ -4,6 +4,7 @@ import numpy as np
 from PyInquirer import prompt
 from rich.console import Console
 from rich.table import Table
+import cliTool
 
 
 def askPrintTasks(tasksList, console):
@@ -39,11 +40,19 @@ def askPrintTasks(tasksList, console):
         table.add_column("Project", justify="center")
         table.add_column("Date Created", justify="center")
         table.add_column("Title", justify="center")
+        table.add_column("URL")
 
         for i in sortedTable:
-            table.add_row(i['project_title'], i['created'][0:10], i['title'])
+            url = f"things:///show?id={i['uuid']}"
+            table.add_row(i['project_title'],
+                          i['created'][0:10],
+                          i['title'],
+                          url)
 
+        print("\n")
         console.print(table)
+        print("\n")
+
     elif answers['printIncompleTasks'] == 'No':
         pass
     else:
@@ -102,7 +111,7 @@ def askForTimeFrame():
 
 def collectTaskCountsByMonth(taskList):
     """
-    Takes in a list of tasks and returns a sorted table counting the 
+    Takes in a list of tasks and returns a sorted table counting the
     number of tasks created in each month and the number completed
     in each month.
 
@@ -148,7 +157,7 @@ def collectTaskCountsByMonth(taskList):
     return sortedTable
 
 
-def askPrintTrends():
+def askPrintTrends(console):
     """
     Asks user if they would like to see trends in tasks. Prints
     datatable of trends by month sorted by year/month
@@ -171,10 +180,43 @@ def askPrintTrends():
         allTasks = things.tasks(type='to-do', status=None, index='todayIndex')
 
         tasksCountsByMonth = collectTaskCountsByMonth(allTasks)
-        console.print(tasksCountsByMonth)
+        table = Table(title="Monthly Task Completion Rate")
+        table.add_column("Date", justify="center")
+        table.add_column("Number Created", justify="center")
+        table.add_column("Number Completed", justify="center")
+        table.add_column("Percent Completed", justify="center")
 
+        for i in tasksCountsByMonth:
+            completionRate = round((i['CountCompleted']/i['Count']) * 100, 0)
+            table.add_row(i['YearMonth'],
+                          str(i['Count']),
+                          str(i['CountCompleted']),
+                          str(completionRate) + "%")
+
+        print("\n")
+        console.print(table)
+        print("\n")
     elif answers['printTrends'] == 'No':
         pass
     else:
         console.print("Please answer with: 'Yes' or 'No'")
         askPrintTrends()
+
+
+def askStartAgain():
+    questions = [
+        {
+            'type': 'list',
+            'name': 'startAgain',
+            'message': 'Would you like to do that again?',
+            'choices': [
+                'Yes',
+                'No',
+            ],
+            'default': 'No'
+        }
+    ]
+    answers = prompt(questions)
+
+    if answers['startAgain'] == 'Yes':
+        cliTool.main()
