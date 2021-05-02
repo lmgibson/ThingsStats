@@ -2,9 +2,11 @@ from datetime import datetime
 import things
 import numpy as np
 from PyInquirer import prompt
+from rich.console import Console
+from rich.table import Table
 
 
-def askPrintTasks(tasksList):
+def askPrintTasks(tasksList, console):
     """
     Asks user if they would like to see the tasks they made
     in the past week. Will repeat until the user answers yes
@@ -14,27 +16,38 @@ def askPrintTasks(tasksList):
         createdTasks (list): list of tuples containing information
         on the tasks that have been created in the past week or month.
     """
-    printTasks = radio(
-        "Would you like to see the uncompleted tasks?", options=['Yes', 'No'])
 
-    if printTasks == 'Yes':
+    questions = [
+        {
+            'type': 'list',
+            'name': 'printIncompleTasks',
+            'message': 'Would you like to see the uncompleted tasks?',
+            'choices': [
+                'Yes',
+                'No',
+            ]
+        }
+    ]
+    answers = prompt(questions)
+
+    if answers['printIncompleTasks'] == 'Yes':
         # Sort Tasks by Date
         sortedTable = sorted(
             tasksList, key=lambda e: e['created'], reverse=True)
 
-        # Formatting Table
-        tableList = []
+        table = Table(title="Incomplete Tasks")
+        table.add_column("Project", justify="center")
+        table.add_column("Date Created", justify="center")
+        table.add_column("Title", justify="center")
+
         for i in sortedTable:
-            tableList.append([i['created'], put_link(
-                i['title'], "things:///show?id=%s" % i['uuid'])])
-            # i[1] = put_link(i['created'], "things:///show?id=%s" % i['uuid'])
-            # _ = i.pop()
-        put_markdown('### Task List')
-        put_table(tableList, header=['Date', 'Title'])
-    elif printTasks == 'No':
+            table.add_row(i['project_title'], i['created'][0:10], i['title'])
+
+        console.print(table)
+    elif answers['printIncompleTasks'] == 'No':
         pass
     else:
-        put_text("Please answer with: 'Yes' or 'No'")
+        console.print("Please answer with: 'Yes' or 'No'")
         askPrintTasks(tasksList)
 
 
@@ -50,18 +63,6 @@ def customTimeFrame():
     ]
 
     answers = prompt(questions)
-
-    # notValidInput = 1
-    # while notValidInput:
-    #     customTimeFrame = input("How many days back would you like?: ")
-    #     try:
-    #         timeFrame = int(customTimeFrame)
-    #         if timeFrame <= 0:
-    #             print("Please enter a number greater than 0")
-    #         elif timeFrame > 0:
-    #             notValidInput = 0
-    #     except:
-    #         print("Please enter a positive number.")
 
     return answers['daysBack']
 
@@ -152,20 +153,28 @@ def askPrintTrends():
     Asks user if they would like to see trends in tasks. Prints
     datatable of trends by month sorted by year/month
     """
-    printTasks = radio(
-        "Would you like to see monthly trends in tasks?", options=['Yes', 'No'])
 
-    if printTasks == 'Yes':
+    questions = [
+        {
+            'type': 'list',
+            'name': 'printTrends',
+            'message': 'Would you like to see monthly trends in tasks?',
+            'choices': [
+                'Yes',
+                'No',
+            ]
+        }
+    ]
+    answers = prompt(questions)
+
+    if answers['printTrends'] == 'Yes':
         allTasks = things.tasks(type='to-do', status=None, index='todayIndex')
 
         tasksCountsByMonth = collectTaskCountsByMonth(allTasks)
-        tableColumnNames = list(tasksCountsByMonth[0].keys())
+        console.print(tasksCountsByMonth)
 
-        put_markdown("### Trends")
-        put_table(tasksCountsByMonth, header=tableColumnNames)
-
-    elif printTasks == 'No':
+    elif answers['printTrends'] == 'No':
         pass
     else:
-        put_text("Please answer with: 'Yes' or 'No'")
+        console.print("Please answer with: 'Yes' or 'No'")
         askPrintTrends()
