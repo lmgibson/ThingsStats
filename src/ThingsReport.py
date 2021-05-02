@@ -6,6 +6,22 @@ from rich.table import Table
 
 
 def askWhatNext(incompleteTasks, console):
+    """
+    Asks the user what they would like to do next by present a list of options
+    for the user to select from.
+
+    Params
+    -------
+        incompleteTasks (list of dicts): A list of incomplete tasks where each
+        task is a dictionary.
+        console (Console): Console object supplied by Rich for printing
+    """
+    projects = []
+    for i in incompleteTasks:
+        if i['project_title'] not in projects:
+            projects.append(i['project_title'])
+    projects.append("All")
+
     questions = [
         {
             'type': 'list',
@@ -20,13 +36,28 @@ def askWhatNext(incompleteTasks, console):
                 'Select a new timeframe',
                 'exit'
             ]
+        },
+        {
+            'type': 'list',
+            'name': 'project',
+            'message': 'Select a project',
+            'when': lambda val: val['whatNext'] == 'View incomplete tasks',
+            'choices': projects
         }
     ]
-    next = prompt(questions)['whatNext']
 
+    # Extract answers
+    answers = prompt(questions)
+    next = answers['whatNext']
+    try:
+        project = answers['project']
+    except:
+        pass
+
+    # Take action based on answer
     if next == 'View incomplete tasks':
         # Print incomplete tasks within X last days
-        utilities.printIncompleteTasks(incompleteTasks, console)
+        utilities.printIncompleteTasks(incompleteTasks, project, console)
         askWhatNext(incompleteTasks, console)
     elif next == 'Count incomplete tasks by project':
         utilities.getIncompleteByProject(console)
