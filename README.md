@@ -4,8 +4,8 @@ This is a set of tools to analyze your [Things](https://culturedcode.com/things/
 
 # How To Use
 
-Because this project is in development you can use it by cloning the repo, installing the dependencies, and running it with `python ./src/ThingsReport.py`.
+Because this project is in development you can use it by cloning the repo, installing the dependencies, and running it with `python ./src/main.py`.
 
 # Example
 
-![](./example/out.gif)
+TBD
