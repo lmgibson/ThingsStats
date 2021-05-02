@@ -7,6 +7,33 @@ from rich.console import Console
 from rich.table import Table
 
 
+def askWhatNext(incompleteTasks, console):
+    questions = [
+        {
+            'type': 'list',
+            'name': 'whatNext',
+            'message': 'What would you like to view next?',
+            'choices': [
+                'Incomplete tasks',
+                'Monthly completion rate',
+                'exit'
+            ]
+        }
+    ]
+    next = prompt(questions)['whatNext']
+
+    if next == 'Incomplete tasks':
+        # Print incomplete tasks within X last days
+        utilities.printIncompleteTasks(incompleteTasks, console)
+        askWhatNext(incompleteTasks, console)
+    elif next == 'Monthly completion rate':
+        # Print trends in task completions
+        utilities.printTrends(console)
+        askWhatNext(incompleteTasks, console)
+    elif next == 'exit':
+        exit()
+
+
 def main():
     console = Console()
 
@@ -33,14 +60,8 @@ def main():
 
     console.print(report)
 
-    # Ask if user would like to see all uncompleted tasks
-    utilities.askPrintTasks(incompleteTasks, console)
-
-    # Print trends in task completions
-    utilities.askPrintTrends(console)
-
-    # Ask if they would like to explore another date (loops back to start)
-    utilities.askStartAgain()
+    # What would you like to do next
+    askWhatNext(incompleteTasks, console)
 
 
 if __name__ == "__main__":
