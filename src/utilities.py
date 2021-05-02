@@ -60,22 +60,6 @@ def askPrintTasks(tasksList, console):
         askPrintTasks(tasksList)
 
 
-def customTimeFrame():
-    questions = [
-        {
-            'type': 'input',
-            'name': 'daysBack',
-            'message': 'How many days back would you like?:',
-            'default': lambda answers: '7',
-            'validate': lambda val: int(val) > 0
-        }
-    ]
-
-    answers = prompt(questions)
-
-    return answers['daysBack']
-
-
 def askForTimeFrame():
     """
     Presents a terminal list so the user can select their
@@ -95,6 +79,14 @@ def askForTimeFrame():
                 'Week',
                 'Custom',
             ]
+        },
+        {
+            'type': 'input',
+            'name': 'daysBack',
+            'message': 'How many days back would you like?:',
+            'default': lambda x: '7',
+            'validate': lambda val: int(val) > 0,
+            'when': lambda answers: answers['timeframe'] == 'Custom'
         }
     ]
     answers = prompt(questions)
@@ -103,8 +95,12 @@ def askForTimeFrame():
         timeFrame = "30d"
     elif answers['timeframe'] == 'Week':
         timeFrame = "7d"
+    elif answers['timeframe'] == 'Custom':
+        timeFrame = answers['daysBack'] + "d"
     else:
-        timeFrame = str(customTimeFrame()) + "d"
+        raise ValueError(
+            "Something went wrong when parsing days back"
+        )
 
     return timeFrame
 
