@@ -8,4 +8,4 @@ Because this project is in development you can use it by cloning the repo, insta
 
 # Example
 
-![](./example/example.gif)
+![](./example/out.gif)
