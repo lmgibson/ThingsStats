@@ -18,17 +18,17 @@ def askForTimeFrame():
         {
             'type': 'list',
             'name': 'timeframe',
-            'message': 'How many days back?',
+            'message': 'How far back do you want results?',
             'choices': [
-                'Month',
-                'Week',
+                'Past Month',
+                'Past Week',
                 'Custom',
             ]
         },
         {
             'type': 'input',
             'name': 'daysBack',
-            'message': 'How many days back would you like?:',
+            'message': 'How many days back would you like results for?:',
             'default': lambda x: '7',
             'validate': lambda val: int(val) > 0,
             'when': lambda answers: answers['timeframe'] == 'Custom'
@@ -36,9 +36,9 @@ def askForTimeFrame():
     ]
     answers = prompt(questions)
 
-    if answers['timeframe'] == 'Month':
+    if answers['timeframe'] == 'Past Month':
         timeFrame = "30d"
-    elif answers['timeframe'] == 'Week':
+    elif answers['timeframe'] == 'Past Week':
         timeFrame = "7d"
     elif answers['timeframe'] == 'Custom':
         timeFrame = answers['daysBack'] + "d"
@@ -67,19 +67,18 @@ def printIncompleteTasks(tasksList, console):
     table = Table(title="Incomplete Tasks")
     table.add_column("Project", justify="center")
     table.add_column("Date Created", justify="center")
-    table.add_column("Title", justify="center")
-    table.add_column("URL")
+    table.add_column("Title", justify="left")
 
     for i in sortedTable:
-        url = f"things:///show?id={i['uuid']}"
-        table.add_row(i['project_title'],
+        url_todo = f"things:///show?id={i['uuid']}"
+        url_project = f"things:///show?id={i['project']}"
+        table.add_row(f"[link={url_project}]{i['project_title']}[/link]",
                       i['created'][0:10],
-                      i['title'],
-                      url)
+                      f"[link={url_todo}]{i['title']}[/link]"
+                      )
 
     print("\n")
     console.print(table)
-    print("\n")
 
 
 def printTrends(console):
@@ -188,7 +187,6 @@ def getIncompleteByProject(console):
             ]
         else:
             combinedCounts[i] = [totalToDosPerProject[i], 0, 0]
-    console.print(combinedCounts)
 
     # Calculating Order by num not completed
     ordered = sorted(combinedCounts.items(),

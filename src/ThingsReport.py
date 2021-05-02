@@ -1,6 +1,6 @@
 import things
 import utilities
-from PyInquirer import prompt
+from PyInquirer import prompt, Separator
 from rich.console import Console
 from rich.table import Table
 
@@ -12,29 +12,31 @@ def askWhatNext(incompleteTasks, console):
             'name': 'whatNext',
             'message': 'What would you like to view next?',
             'choices': [
-                'Incomplete tasks',
-                'Monthly completion rate',
-                'Select new days back',
-                'Get incomplete by project',
+                'View incomplete tasks',
+                'Count incomplete tasks by project',
+                Separator(),
+                'View monthly completion rate',
+                Separator(),
+                'Select a new timeframe',
                 'exit'
             ]
         }
     ]
     next = prompt(questions)['whatNext']
 
-    if next == 'Incomplete tasks':
+    if next == 'View incomplete tasks':
         # Print incomplete tasks within X last days
         utilities.printIncompleteTasks(incompleteTasks, console)
         askWhatNext(incompleteTasks, console)
-    elif next == 'Monthly completion rate':
+    elif next == 'Count incomplete tasks by project':
+        utilities.getIncompleteByProject(console)
+        askWhatNext(incompleteTasks, console)
+    elif next == 'View monthly completion rate':
         # Print trends in task completions
         utilities.printTrends(console)
         askWhatNext(incompleteTasks, console)
-    elif next == 'Select new days back':
+    elif next == 'Select a new timeframe':
         main()
-    elif next == 'Get incomplete by project':
-        utilities.getIncompleteByProject(console)
-        askWhatNext(incompleteTasks, console)
     elif next == 'exit':
         exit()
 
