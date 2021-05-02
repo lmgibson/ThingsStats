@@ -1,5 +1,6 @@
 import webbrowser
 from datetime import date, datetime
+import things
 
 
 def createDailyToDo():
@@ -22,11 +23,9 @@ def addItem():
 
 
 def main():
-    title = input("What would you like to add")
-    project = "Daily Tracker"
-    url = f"things:///add?title={title}&list={project}"
-    webbrowser.open(url)
+    createDailyToDo()
+    addItem()
 
 
 if __name__ == "__main__":
-    createDailyToDo()
+    addItem()
