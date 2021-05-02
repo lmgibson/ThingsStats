@@ -27,7 +27,7 @@ def main():
     ------------------------------------
     In the past %s days you have [bold]created[/bold] 
     %s tasks of which you have [bold]completed[/bold] %s.
-    """ % (timeFrame[0:2],
+    """ % (timeFrame[:-1],
            totalTaskCount,
            len(completedTasks))
 

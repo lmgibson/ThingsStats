@@ -219,4 +219,5 @@ def askStartAgain():
     answers = prompt(questions)
 
     if answers['startAgain'] == 'Yes':
+        print("\n")
         cliTool.main()
