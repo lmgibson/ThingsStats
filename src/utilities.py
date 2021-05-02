@@ -1,8 +1,7 @@
 from datetime import datetime
 import things
 import numpy as np
-from pywebio.input import select, input, radio
-from pywebio.output import put_text, put_markdown, put_table, put_link
+from PyInquirer import prompt
 
 
 def askPrintTasks(tasksList):
@@ -63,16 +62,31 @@ def askForTimeFrame():
     Returns:
         integer: timeframe in integer values 30 for month, 6 for week.
     """
-    menu_choice = select('Select a timeframe', ['Month', 'Week', 'Custom'])
 
-    if menu_choice == 'Month':
-        timeFrame = "30d"
-    elif menu_choice == 'Week':
-        timeFrame = "7d"
-    else:
-        timeFrame = str(customTimeFrame()) + "d"
+    questions = [
+        {
+            'type': 'list',
+            'name': 'timeframe',
+            'message': 'How many days back?',
+            'choices': [
+                'Month',
+                'Week',
+                'Custom',
+            ]
+        }
+    ]
+    answers = prompt(questions)
 
-    return timeFrame
+    # menu_choice = select('Select a timeframe', ['Month', 'Week', 'Custom'])
+
+    # if menu_choice == 'Month':
+    #     timeFrame = "30d"
+    # elif menu_choice == 'Week':
+    #     timeFrame = "7d"
+    # else:
+    #     timeFrame = str(customTimeFrame()) + "d"
+
+    return answers
 
 
 def collectTaskCountsByMonth(taskList):
