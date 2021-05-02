@@ -1,10 +1,7 @@
 from datetime import datetime
 import things
-import numpy as np
 from PyInquirer import prompt
-from rich.console import Console
 from rich.table import Table
-import cliTool
 
 
 def askForTimeFrame():
