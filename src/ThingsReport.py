@@ -90,8 +90,8 @@ def main():
     report = """
           :raccoon: Stats Overview :raccoon: 
     ------------------------------------
-    In the past %s days you have [bold]created[/bold] %s 
-    tasks of which you have [bold]completed[/bold] %s.
+    In the past %s days you have [bold red]created[/bold red] %s 
+    tasks of which you have [bold red]completed[/bold red] %s.
     """ % (timeFrame[:-1],
            totalTaskCount,
            len(completedTasks))
