@@ -30,7 +30,6 @@ def addChecklistItem(activeTodos, message):
 
     # Add item
     id = [i['uuid'] for i in things.todos() if i['title'] == formattedDate]
-    message = message
     token = os.environ['THINGS_TOKEN']
     url = f"things:///update?id={id}&auth-token={token}&append-checklist-items={message}"
     webbrowser.open(url)
