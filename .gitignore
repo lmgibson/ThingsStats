@@ -5,3 +5,6 @@ builds
 env
 .DS_Store
 archive
+build
+dist
+thingscli.egg*
