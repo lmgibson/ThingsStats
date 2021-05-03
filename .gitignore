@@ -8,3 +8,5 @@ archive
 build
 dist
 thingscli.egg*
+setup*
+pyproject.toml
