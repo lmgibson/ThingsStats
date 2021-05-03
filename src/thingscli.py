@@ -29,5 +29,9 @@ things.add_command(report)
 things.add_command(add)
 
 
-if __name__ == '__main__':
+def main():
     things()
+
+
+if __name__ == '__main__':
+    main()
