@@ -1,7 +1,7 @@
-from src import main
-from src import ThingsAddDaily
-from src import utilities
-from src import ThingsReport
+from thingscli import main
+from thingscli import ThingsAddDaily
+from thingscli import utilities
+from thingscli import ThingsReport
 
 if __name__ == "__main__":
     main.things()
