@@ -22,4 +22,4 @@ Example coming soon.
 
 Report is an interactive tool that presents the user with different information on their things usage.
 
-Example coming soon.
+[![asciicast](https://asciinema.org/a/qYOWzmVNsiahVvCgfhdD0w5Ps.png)](hhttps://asciinema.org/a/qYOWzmVNsiahVvCgfhdD0w5Ps)
